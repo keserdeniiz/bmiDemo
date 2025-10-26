@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6fa; /* Lilac color */
+            color: #ff7eb9;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .admin-login {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #resultContainer {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function calculateIndex() {
+            // Get the values from the form fields
+            var firstName = document.getElementById("firstName").value;
+            var lastName = document.getElementById("lastName").value;
+            var dob = document.getElementById("dob").value;
+            var gender = document.getElementById("gender").value;
+            var weight = parseFloat(document.getElementById("weight").value);
+            var height = parseFloat(document.getElementById("height").value);
+
+            // Create a JavaScript object to hold the user data
+            var user = {
+                firstName: firstName,
+                lastName: lastName,
+                dateOfBirth: dob,
+                gender: gender,
+                weight: weight,
+                height: height
+            };
+
+            // Send the user data to the server
+            fetch('/saveUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to save user data!');
+                }
+            })
+            .then(function(data) {
+                // Display the index range and classification on the page
+                var indexRange = data.indexRange;
+                var classification = data.classification;
+                var resultContainer = document.getElementById("resultContainer");
+                resultContainer.innerHTML = "Index Range: " + indexRange + "<br>Classification: " + classification;
+            })
+            .catch(function(error) {
+                alert('An error occurred while saving user data: ' + error.message);
+            });
+        }
+
+        function goToAdminLogin() {
+            window.location.href = "adminLogin.html";
+        }
+
+        function connection() {
+            fetch('/connection', {
+                method: 'POST'
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    alert('Connection to the database successful!');
+                } else {
+                    alert('Connection to the database failed!');
+                }
+            })
+            .catch(function(error) {
+                alert('An error occurred while connecting to the database: ' + error.message);
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <h1>BMI CALCULATOR</h1>
+    <form action="/register" method="post"></form>
+</div>
+<div class="admin-login">
+    <button type="button" onclick="goToAdminLogin()">Admin Login</button>
+</div>
+<form>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" required><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" required><br>
+
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob" required><br>
+
+    <label for="gender">Gender:</label>
+    <select id="gender" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+    </select><br>
+    <label for="weight">Weight (in kg):</label>
+    <input type="number" id="weight" step="0.01" required><br>
+
+    <label for="height">Height (in meters):</label>
+    <input type="number" id="height" step="0.01" required><br>
+
+    <button type="button" onclick="calculateIndex()">Calculate</button>
+    <button onclick="connection()">Connect</button>
+</form>
+<div id="resultContainer"></div> <!-- Add this line -->
+</body>
+</html>

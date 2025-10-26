@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Reports</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #e6e6fa; /* Lilac color */
+            color: #ff7eb9;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>REPORTS</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Index Result</th>
+        <th>Index Range</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate over the BMIView list and display the data -->
+    <th:block th:each="bmiView : ${bmiViews}">
+        <tr>
+            <td th:text="${bmiView.id}"></td>
+            <td th:text="${bmiView.firstName}"></td>
+            <td th:text="${bmiView.lastName}"></td>
+            <td th:text="${bmiView.indexResult}"></td>
+            <td th:text="${bmiView.indexRange}"></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+</body>
+</html>
